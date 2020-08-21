@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ghost-server
+spec:
+  ports:
+  - port: 80
+    targetPort: 2368
+  selector:
+    app: ghost
+    part: http-pod
+  clusterIP: None
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: ghost-pod-storage
+    labels:
+        app: ghost
+        part: storage
+spec:
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+            storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: ghost-http-deploy
+spec:
+    selector:
+      matchLabels: 
+        app: ghost
+        part: http-pod
+    replicas: 1
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                app: ghost
+                part: http-pod
+        spec:
+            volumes:
+                - name: ghost-pod-storage
+                  persistentVolumeClaim:
+                    claimName: ghost-pod-storage
+            containers:
+                - name: ghost
+                  image: "ghost:3-alpine"
+                  ports:
+                      - containerPort: 80
+                  volumeMounts:
+                      - name: ghost-pod-storage
+                        mountPath: /var/lib/ghost/content
+                  envFrom:
+                  - configMapRef:
+                      name: ghost-environment
+                  env:
+                    - name: database__connection__password
+                      valueFrom:
+                        secretKeyRef:
+                          name: mysql-pass
+                          key: password
+                  # env:
+                  # - name: url
+                  #   value: https://xingpeds.com/fioys/
+                  # - name: WORDPRESS_DB_HOST
+                  #   value: mysql-server
+                  # - name: WORDPRESS_DB_PASSWORD
+                  #   valueFrom:
+                  #       secretKeyRef:
+                  #           name: mysql-pass
+                  #           key: password
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: ghost-environment
+data:
+    url: https://xingpeds.com/blog/
+    database__client: mysql
+    database__connection__host: mysql-server
+    database__connection__user: root
+    database__connection__database: ghost

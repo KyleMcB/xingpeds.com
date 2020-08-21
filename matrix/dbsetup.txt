@@ -1,0 +1,9 @@
+#TODO turn this into a a job that connects to the database and creates the user and database for matrix automatically
+createuser --pwprompt synapse_user
+
+CREATE DATABASE synapse
+ ENCODING 'UTF8'
+ LC_COLLATE='C'
+ LC_CTYPE='C'
+ template=template0
+ OWNER synapse_user;

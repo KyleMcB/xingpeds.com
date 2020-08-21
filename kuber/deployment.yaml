@@ -1,0 +1,20 @@
+#stub/parking website image
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy1
+spec:
+  selector:
+    matchLabels:
+      app: thing
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: thing
+    spec:
+      containers:
+      - name: plainhtmlsite
+        image: gcr.io/personalpage-286518/mysite
+        ports:
+        - containerPort: 80
