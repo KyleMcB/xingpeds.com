@@ -1,0 +1,2 @@
+#!/usr/bin/fish
+docker build -t $REG/$REPO/website .

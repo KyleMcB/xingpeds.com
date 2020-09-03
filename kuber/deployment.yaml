@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: plainhtmlsite
-        image: gcr.io/personalpage-286518/mysite
+        image: gcr.io/personalpage-286518/website
         ports:
         - containerPort: 80
 
