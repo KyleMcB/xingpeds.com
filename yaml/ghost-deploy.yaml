@@ -10,20 +10,7 @@ spec:
     app: ghost
     part: http-pod
   clusterIP: None
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-    name: ghost-pod-storage
-    labels:
-        app: ghost
-        part: storage
-spec:
-    accessModes:
-        - ReadWriteOnce
-    resources:
-        requests:
-            storage: 5Gi
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -80,7 +67,7 @@ kind: ConfigMap
 metadata:
     name: ghost-environment
 data:
-    url: https://xingpeds.com/blog/
+    url: https://xingpeds.com/
     database__client: mysql
     database__connection__host: mysql-server
     database__connection__user: root
