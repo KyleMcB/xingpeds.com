@@ -38,7 +38,7 @@ spec:
         app: postgres
     spec:
       containers:
-      - image: postgres
+      - image: postgres:12.4
         name: postgres
         env:
         - name: POSTGRES_PASSWORD
